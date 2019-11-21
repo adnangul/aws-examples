@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: temp-unit-conv-app
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: nodejs10.x
+Resources:
+  TempConversionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://adnan-aws-east-2-sam-bucket/5180d811688846e3fbdcc57b49cbfe58
+      Handler: app.lambdaHandler
+      Layers:
+      - Ref: TempConversionDepLayer
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /{conversion}/{value}
+            Method: get
+  TempConversionDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: sam-app-dependencies
+      Description: Dependencies for sam app [temp-units-conv]
+      ContentUri: s3://adnan-aws-east-2-sam-bucket/8ee5a0928c814cf58db45c51238ed64b
+      CompatibleRuntimes:
+      - nodejs8.10
+      - nodejs10.x
+      LicenseInfo: MIT
+      RetentionPolicy: Retain

@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: |
+  SF-Publisher
+  Salesforce publisher - Consume patient events from topic and publishes to Salesforce service cloud.
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  PublishSFEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: sf-publisher/
+      Handler: app.lambdaHandler
+      Runtime: nodejs10.x
+      Environment:
+        Variables:
+          SF_AUTH_TOKEN_URL: https://test.salesforce.com/services/oauth2/token
+          SF_APPT_API_URL: https://cs36.salesforce.com/services/data/v46.0/sobjects/Appointment__e
+          USER_NAME: adnan.yaqoob@labcorp.com.dev
+          PASSWORD : iluAmber$123r1a4Jd4Mjy8znTRMJaxWCF1Da
+          CLIENT_ID: 3MVG9jBOyAOWY5bXdcE2zYgywJsubSFHmB1_9ravQ7mT9Kr.baMby6fvTwmzVQ.dweXu1hX7C6P4SayRe.c94
+          CLIENT_SECRET: 31F51219627564E5548AA3BDD4E23920ABC552580F508265B3DEC6CA1D709916
+          GRANT_TYPE: password
+          TEST: !Ref Username
+      Events:
+        Topic:
+          Type: SNS
+          Properties:
+            Topic: !Ref Topic
+            # Topic: arn:aws:sns:us-east-2:123456789012:my_topic # for an existing topic, just provide arn
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${AWS::StackName}-Topic
+Parameters:
+  # AuthURL: https://test.salesforce.com/services/oauth2/token
+  # PatientApiURL: https://cs36.salesforce.com/services/data/v46.0/sobjects/Appointment__e
+  # Username: adnan.yaqoob@labcorp.com.dev
+  # Password: password
+  # ClientID: 3MVG9jBOyAOWY5bXdcE2zYgywJsubSFHmB1_9ravQ7mT9Kr.baMby6fvTwmzVQ.dweXu1hX7C6P4SayRe.c94
+  # ClientSecret: 31F51219627564E5548AA3BDD4E23920ABC552580F508265B3DEC6CA1D709916
+  # GrantType: password
+  Username:
+    Type: String  ## ADD THIS LINE
+    Description: 'Name of user'
+    Default: Ayaqoob
+Outputs:
+  PublishSFEventFunction:
+    Description: Salesforce publisher Lambda Function ARN
+    Value: !GetAtt PublishSFEventFunction.Arn
+  PublishSFEventFunctionIamRole:
+    Description: Implicit IAM Role created for Salesforce publisher function
+    Value: !GetAtt PublishSFEventFunctionRole.Arn

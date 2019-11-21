@@ -1,0 +1,19 @@
+{
+  "name": "SF-Publisher",
+  "version": "1.0.0",
+  "description": "Salesforce publisher - Consume patient events from topic and publishes to Salesforce service cloud.",
+  "main": "app.js",
+  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "author": "Adnan Yaqoob",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "scripts": {
+    "test": "mocha tests/unit/"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
+  }
+}
